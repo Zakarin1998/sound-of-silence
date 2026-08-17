@@ -8,7 +8,6 @@ type NoiseMeshProps = {
 
 type NetworkGeometry = {
   geometry: THREE.BufferGeometry;
-  count: number;
 };
 
 const OUTER_COUNT = 96;
@@ -34,7 +33,7 @@ const pushSegment = (target: number[], a: THREE.Vector3, b: THREE.Vector3) => {
 const makeGeometry = (segments: number[]): NetworkGeometry => {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(segments, 3));
-  return { geometry, count: segments.length / 6 };
+  return { geometry };
 };
 
 export function NoiseMesh({ active }: NoiseMeshProps) {
@@ -96,8 +95,8 @@ export function NoiseMesh({ active }: NoiseMeshProps) {
 
     // Inner nodes stitch the rim together while preserving a quiet hollow center.
     inner.forEach((node, index) => {
-      const nearestOuter = [...outer]
-        .map((candidate, candidateIndex) => ({ candidate, candidateIndex, distance: node.distanceTo(candidate) }))
+      const nearestOuter = outer
+        .map((candidate) => ({ candidate, distance: node.distanceTo(candidate) }))
         .sort((a, b) => a.distance - b.distance)
         .slice(0, 3);
 
@@ -130,10 +129,12 @@ export function NoiseMesh({ active }: NoiseMeshProps) {
     };
   }, []);
 
-  const pointPositions = useMemo(() => {
+  const pointGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
     const values = new Float32Array(points.length * 3);
     points.forEach((point, index) => point.toArray(values, index * 3));
-    return values;
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(values, 3));
+    return geometry;
   }, [points]);
 
   useFrame((state, delta) => {
@@ -185,15 +186,7 @@ export function NoiseMesh({ active }: NoiseMeshProps) {
         <lineBasicMaterial color="#c8d1d7" transparent opacity={active ? 0.055 : 0.008} />
       </lineSegments>
 
-      <points ref={nodesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={points.length}
-            array={pointPositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points ref={nodesRef} geometry={pointGeometry}>
         <pointsMaterial
           color="#e4e9ec"
           size={0.035}
