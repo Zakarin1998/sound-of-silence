@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BrainCircuit, Moon, RadioTower } from 'lucide-react';
+import { BrainCircuit, Moon } from 'lucide-react';
 import { NoiseMesh } from './NoiseMesh';
 
 export default function App() {
@@ -43,8 +43,6 @@ export default function App() {
               transition={{ duration: 0.6 }}
               className="panel"
             >
-              <RadioTower className="panel-icon" size={34} />
-              <p className="eyebrow">cognitive loop detected</p>
               <h1>THE STRUCTURE IS THE NOISE.</h1>
               <button onClick={() => setIsQuiet(true)}>[ ENTER THE QUIET ]</button>
             </motion.section>
