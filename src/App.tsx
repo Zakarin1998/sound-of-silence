@@ -19,10 +19,16 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className={`ambient-glow ${isQuiet ? 'ambient-glow--quiet' : ''}`} />
+      <div className="ambient-vignette" />
+      <div className="ambient-grain" />
 
       <div className="scene" aria-hidden="true">
-        <Canvas camera={{ position: [0, 0, 7], fov: 60 }}>
-          <ambientLight intensity={0.5} />
+        <Canvas
+          camera={{ position: [0, 0, 10], fov: 40 }}
+          dpr={[1, 2]}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <fog attach="fog" args={['#080b0f', 9, 16]} />
           <NoiseMesh active={!isQuiet} />
         </Canvas>
       </div>
