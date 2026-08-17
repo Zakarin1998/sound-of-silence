@@ -43,6 +43,7 @@ export default function App() {
               transition={{ duration: 0.6 }}
               className="panel"
             >
+              <p className="eyebrow">cognitive loop detected</p>
               <h1>THE STRUCTURE IS THE NOISE.</h1>
               <button onClick={() => setIsQuiet(true)}>[ ENTER THE QUIET ]</button>
             </motion.section>
